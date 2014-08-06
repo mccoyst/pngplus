@@ -22,7 +22,12 @@ func main() {
 		fmt.Fprintf(os.Stderr, "oops: %v\n", err)
 		os.Exit(1)
 	}
-	err = pngplus.EncodeITXT(os.Stdout, "hello")
+	err = pngplus.EncodeBinary(os.Stdout, []byte("hello"))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "oops: %v\n", err)
+		os.Exit(1)
+	}
+	err = pngplus.EncodeITXT(os.Stdout, false, "name", "en-US", "there")
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "oops: %v\n", err)
 		os.Exit(1)
