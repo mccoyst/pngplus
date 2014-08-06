@@ -19,9 +19,6 @@ func TestEncodeBinary(t *testing.T) {
 	}
 
 	bs := w.Bytes()
-	if len(bs) != 4*3 + len(s) {
-		t.Fatalf("wrong length for output: %x", bs)
-	}
 
 	var n uint32
 	err = binary.Read(bytes.NewBuffer(bs), binary.BigEndian, &n)
@@ -33,14 +30,10 @@ func TestEncodeBinary(t *testing.T) {
 		t.Fatalf("wrong chunk length: %d vs. %d", n, len(s))
 	}
 
-	g := bs[4:8]
-	if bytes.Compare(g, []byte("biNy")) != 0 {
-		t.Fatalf("wrong chunk type: %q", g)
-	}
-
-	g = bs[8:8+len(s)]
-	if bytes.Compare(g, s) != 0 {
-		t.Fatalf("wrong chunk content: %q vs. %q", g, s)
+	content := string(bs[4:len(bs)-4])
+	expected := "biNyhello"
+	if content != expected {
+		t.Fatalf("wrong content: %q vs. %q", content, expected)
 	}
 
 	var crc uint32
@@ -49,7 +42,8 @@ func TestEncodeBinary(t *testing.T) {
 		t.Fatalf("unexpected crc read error: %v", err)
 	}
 
-	if crc != crc32.ChecksumIEEE([]byte("iTXthello")) {
-		t.Fatalf("wrong crc: %d vs. %d", crc, 666)
+	excrc := crc32.ChecksumIEEE([]byte(expected))
+	if crc != excrc {
+		t.Fatalf("wrong crc: %d vs. %d", crc, excrc)
 	}
 }
