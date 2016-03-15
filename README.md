@@ -1,7 +1,7 @@
 pngplus
 =======
 
-Add metadata to PNGs
+Add arbitrary binary data to PNGs
 
 [![GoDoc](https://godoc.org/github.com/mccoyst/pngplus?status.svg)](https://godoc.org/github.com/mccoyst/pngplus)
 
