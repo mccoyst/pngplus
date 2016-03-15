@@ -11,7 +11,7 @@ import (
 	"io/ioutil"
 )
 
-// EncodeIBinary writes to w a chunk with data from s.
+// EncodeBinary writes to w a chunk with data from s.
 // The chunk is given the type "biNy", because I just made it up,
 // it's not necessary to decode the image, and it's safe to copy.
 // If len(s) cannot fit in a uint32, it is truncated.
