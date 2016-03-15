@@ -47,3 +47,21 @@ func TestEncodeBinary(t *testing.T) {
 		t.Fatalf("wrong crc: %d vs. %d", crc, excrc)
 	}
 }
+
+func TestDecodeBinary(t *testing.T) {
+	var w bytes.Buffer
+	s := []byte("hello")
+
+	err := EncodeBinary(&w, s)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	result, err := DecodeBinary(&w)
+	if err != nil {
+		t.Fatalf("failed to decode: %v", err)
+	}
+	if string(result) != "hello" {
+		t.Fatalf("unexpected result: %q", string(result))
+	}
+}

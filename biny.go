@@ -5,8 +5,10 @@ package pngplus
 import (
 	"bytes"
 	"encoding/binary"
+	"errors"
 	"hash/crc32"
 	"io"
+	"io/ioutil"
 )
 
 // EncodeIBinary writes to w a chunk with data from s.
@@ -31,4 +33,47 @@ func EncodeBinary(w io.Writer, s []byte) error {
 
 	_, err = w.Write(b.Bytes())
 	return err
+}
+
+var ErrNotBinary = errors.New("not a biNy")
+
+// DecodeBinary tries to read a "biNy" chunk from r.
+// You should have decoded a PNG from r before calling this
+// to handle parsing of the initial PNG header, etc.
+// DecodeBinary will return ErrNotBinary if the current chunk in the reader is not biNy,
+// and scan to the next chunk.
+func DecodeBinary(r io.Reader) ([]byte, error) {
+	buf := make([]byte, 8)
+	_, err := io.ReadFull(r, buf)
+	if err != nil {
+		return nil, err
+	}
+	length := binary.BigEndian.Uint32(buf[:4])
+	crc := crc32.NewIEEE()
+	crc.Write(buf[4:8])
+
+	if string(buf[4:8]) != "biNy" {
+		_, err = io.CopyN(ioutil.Discard, r, int64(length) + 4)
+		if err != nil {
+			return nil, err
+		}
+		return nil, ErrNotBinary
+	}
+
+	b := make([]byte, length)
+	_, err = io.ReadFull(r, b)
+	if err != nil {
+		return nil, err
+	}
+	crc.Write(b)
+
+	_, err = io.ReadFull(r, buf[:4])
+	if err != nil {
+		return nil, err
+	}
+	if binary.BigEndian.Uint32(buf[:4]) != crc.Sum32() {
+		return nil, errors.New("Invalid checksum")
+	}
+
+	return b, nil
 }
