@@ -5,6 +5,7 @@ package pngplus
 import (
 	"bytes"
 	"encoding/binary"
+	"io"
 	"hash/crc32"
 	"testing"
 )
@@ -50,9 +51,15 @@ func TestEncodeBinary(t *testing.T) {
 
 func TestDecodeBinary(t *testing.T) {
 	var w bytes.Buffer
+
+	_, err := DecodeBinary(&w)
+	if err != io.EOF {
+		t.Errorf("expected EOF, got %v", err)
+	}
+
 	s := []byte("hello")
 
-	err := EncodeBinary(&w, s)
+	err = EncodeBinary(&w, s)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
