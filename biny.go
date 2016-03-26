@@ -47,7 +47,7 @@ func DecodeBinary(r io.Reader) ([]byte, error) {
 	crc.Write(buf[4:8])
 
 	if string(buf[4:8]) != "biNy" {
-		_, err = io.CopyN(ioutil.Discard, r, int64(length) + 4)
+		_, err = io.CopyN(ioutil.Discard, r, int64(length)+4)
 		if err != nil {
 			return nil, err
 		}

@@ -46,7 +46,7 @@ func main() {
 			os.Exit(1)
 		}
 		os.Stdout.Write(b)
-		os.Stdout.WriteString("\n");
+		os.Stdout.WriteString("\n")
 	} else {
 		_, err := png.Decode(os.Stdin)
 		if err != nil {
@@ -63,7 +63,7 @@ func main() {
 				os.Exit(1)
 			}
 			os.Stdout.Write(b)
-			os.Stdout.WriteString("\n");
+			os.Stdout.WriteString("\n")
 		}
 	}
 }
