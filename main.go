@@ -1,5 +1,5 @@
 // +build ignore
-// © 2014 Steve McCoy under the MIT license. See LICENSE for details.
+// © 2016 Steve McCoy under the MIT license. See LICENSE for details.
 
 package main
 
