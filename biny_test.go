@@ -88,4 +88,7 @@ func TestDecodeBinary(t *testing.T) {
 	if err != ErrNotBinary {
 		t.Fatalf("expected ErrNotBinary, got: %v", err)
 	}
+	if w.Len() != 0 {
+		t.Fatalf("expected chunk to be skipped, have %d remaining", w.Len())
+	}
 }
