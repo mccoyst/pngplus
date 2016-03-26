@@ -132,4 +132,18 @@ func TestDecodeBinary(t *testing.T) {
 	if err != io.ErrUnexpectedEOF {
 		t.Fatalf("expected UnexpectedEOF, got: %v", err)
 	}
+
+	// Bad CRC
+	w.Reset()
+	err = EncodeBinary(&w, s)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	w.Bytes()[w.Len()-1] = 0
+
+	result, err = DecodeBinary(&w)
+	if err == nil {
+		t.Fatalf("expected an error when checking CRC, got success")
+	}
 }
