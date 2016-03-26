@@ -17,21 +17,15 @@ import (
 // If len(s) cannot fit in a uint32, it is truncated.
 func EncodeBinary(w io.Writer, s []byte) error {
 	var b bytes.Buffer
-	err := binary.Write(&b, binary.BigEndian, uint32(len(s)))
-	if err != nil {
-		return err
-	}
+	_ = binary.Write(&b, binary.BigEndian, uint32(len(s)))
 
 	b.WriteString("biNy")
 	b.Write(s)
 
 	buf := b.Bytes()
-	err = binary.Write(&b, binary.BigEndian, crc32.ChecksumIEEE(buf[4:]))
-	if err != nil {
-		return err
-	}
+	_ = binary.Write(&b, binary.BigEndian, crc32.ChecksumIEEE(buf[4:]))
 
-	_, err = w.Write(b.Bytes())
+	_, err := w.Write(b.Bytes())
 	return err
 }
 
