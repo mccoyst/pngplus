@@ -74,6 +74,9 @@ func TestDecodeBinary(t *testing.T) {
 	if string(result) != "hello" {
 		t.Fatalf("unexpected result: %q", string(result))
 	}
+	if w.Len() != 0 {
+		t.Fatalf("unexpected remains in w: %d", w.Len())
+	}
 
 	// Non-biNy
 	w.Reset()
@@ -90,5 +93,19 @@ func TestDecodeBinary(t *testing.T) {
 	}
 	if w.Len() != 0 {
 		t.Fatalf("expected chunk to be skipped, have %d remaining", w.Len())
+	}
+
+	// Non-biNy and short
+	w.Reset()
+	err = EncodeBinary(&w, s)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	w.Bytes()[4] = 'q'
+
+	result, err = DecodeBinary(&io.LimitedReader{R: &w, N: int64(w.Len())-1})
+	if err != io.EOF {
+		t.Fatalf("expected EOF, got: %v", err)
 	}
 }
