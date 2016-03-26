@@ -52,6 +52,7 @@ func TestEncodeBinary(t *testing.T) {
 func TestDecodeBinary(t *testing.T) {
 	var w bytes.Buffer
 
+	// Very short
 	_, err := DecodeBinary(&w)
 	if err != io.EOF {
 		t.Errorf("expected EOF, got %v", err)
@@ -59,6 +60,8 @@ func TestDecodeBinary(t *testing.T) {
 
 	s := []byte("hello")
 
+	// Normal
+	w.Reset()
 	err = EncodeBinary(&w, s)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -70,5 +73,19 @@ func TestDecodeBinary(t *testing.T) {
 	}
 	if string(result) != "hello" {
 		t.Fatalf("unexpected result: %q", string(result))
+	}
+
+	// Non-biNy
+	w.Reset()
+	err = EncodeBinary(&w, s)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	w.Bytes()[4] = 'q'
+
+	result, err = DecodeBinary(&w)
+	if err != ErrNotBinary {
+		t.Fatalf("expected ErrNotBinary, got: %v", err)
 	}
 }
