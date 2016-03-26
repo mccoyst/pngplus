@@ -108,4 +108,17 @@ func TestDecodeBinary(t *testing.T) {
 	if err != io.EOF {
 		t.Fatalf("expected EOF, got: %v", err)
 	}
+
+	// biNy and short during content
+	w.Reset()
+	err = EncodeBinary(&w, s)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	result, err = DecodeBinary(&io.LimitedReader{R: &w, N: int64(w.Len())-5})
+	if err != io.ErrUnexpectedEOF {
+		t.Fatalf("expected UnexpectedEOF, got: %v", err)
+	}
+
 }
