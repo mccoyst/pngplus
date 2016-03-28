@@ -7,4 +7,4 @@ Add arbitrary binary data to PNGs
 
 [![Build Status](https://travis-ci.org/mccoyst/pngplus.svg)](https://travis-ci.org/mccoyst/pngplus)
 
-![Test Coverage](https://img.shields.io/badge/coverage-100.0%25-brightgreen.svg)
+[![Test Coverage](https://img.shields.io/badge/coverage-100.0%25-brightgreen.svg)](https://gocover.io/github.com/mccoyst/pngplus)
